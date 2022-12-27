@@ -9,44 +9,48 @@ enum class AudioType : uint32_t {
   kUnknownType = 0,
 
   // Lossy
-  kAudioTypeOGG,
-  kAudioTypeAAC,
-  kAudioTypeMP3,
-  kAudioTypeM4A,
-  kAudioTypeM4B,
-  kAudioTypeMP4,
+  kAudioTypeOGG = 1,
+  kAudioTypeAAC = 2,
+  kAudioTypeMP3 = 3,
+  kAudioTypeM4A = 4,
+  kAudioTypeM4B = 5,
+  kAudioTypeMP4 = 6,
 
   // Lossless
-  kAudioTypeFLAC = kAudioTypeMaskLossless,
-  kAudioTypeDFF,
-  kAudioTypeWAV,
-  kAudioTypeWMA,
-  kAudioTypeAPE,
+  kAudioTypeFLAC = kAudioTypeMaskLossless | 1,
+  kAudioTypeDFF = kAudioTypeMaskLossless | 2,
+  kAudioTypeWAV = kAudioTypeMaskLossless | 3,
+  kAudioTypeWMA = kAudioTypeMaskLossless | 4,
+  kAudioTypeAPE = kAudioTypeMaskLossless | 5,
 };
 
 inline const char* GetAudioTypeExtension(AudioType type) {
+  using enum AudioType;
   switch (type) {
-    case AudioType::kAudioTypeOGG:
+      // Lossy types
+    case kAudioTypeOGG:
       return "ogg";
-    case AudioType::kAudioTypeAAC:
+    case kAudioTypeAAC:
       return "aac";
-    case AudioType::kAudioTypeMP3:
+    case kAudioTypeMP3:
       return "mp3";
-    case AudioType::kAudioTypeM4A:
+    case kAudioTypeM4A:
       return "m4a";
-    case AudioType::kAudioTypeM4B:
+    case kAudioTypeM4B:
       return "m4b";
-    case AudioType::kAudioTypeMP4:
+    case kAudioTypeMP4:
       return "mp4";
-    case AudioType::kAudioTypeFLAC:
+
+      // Lossless types
+    case kAudioTypeFLAC:
       return "flac";
-    case AudioType::kAudioTypeDFF:
+    case kAudioTypeDFF:
       return "dff";
-    case AudioType::kAudioTypeWAV:
+    case kAudioTypeWAV:
       return "wav";
-    case AudioType::kAudioTypeWMA:
+    case kAudioTypeWMA:
       return "wma";
-    case AudioType::kAudioTypeAPE:
+    case kAudioTypeAPE:
       return "ape";
 
     default:

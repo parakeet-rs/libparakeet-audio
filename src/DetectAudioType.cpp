@@ -39,12 +39,13 @@ constexpr uint32_t kMagic_ftyp_mp4 = 0x6D'70'34u;  // MP4 container, used by
 // QQ Music (E-AC-3 JOC)
 
 auto DetectAudioType(const std::span<const uint8_t> buffer) -> AudioType {
+  using enum AudioType;
   auto buf = buffer;
 
   // Seek optional id3 tag.
   if (auto meta_len = GetAudioHeaderMetadataSize(buffer); meta_len > 0) {
     if (meta_len > buffer.size()) {
-      return AudioType::kUnknownType;
+      return kUnknownType;
     }
 
     buf = std::span{&buf[meta_len], buf.size() - meta_len};
@@ -56,17 +57,17 @@ auto DetectAudioType(const std::span<const uint8_t> buffer) -> AudioType {
 
     switch (magic) {
       case kMagic_fLaC:
-        return AudioType::kAudioTypeFLAC;
+        return kAudioTypeFLAC;
       case kMagic_OggS:
-        return AudioType::kAudioTypeOGG;
+        return kAudioTypeOGG;
       case kMagic_FRM8:
-        return AudioType::kAudioTypeDFF;
+        return kAudioTypeDFF;
       case kMagic__wma:
-        return AudioType::kAudioTypeWMA;
+        return kAudioTypeWMA;
       case kMagic_RIFF:
-        return AudioType::kAudioTypeWAV;
+        return kAudioTypeWAV;
       case kMagic__MAC:
-        return AudioType::kAudioTypeAPE;
+        return kAudioTypeAPE;
       default: {
         // Do nothing
       }
@@ -74,9 +75,9 @@ auto DetectAudioType(const std::span<const uint8_t> buffer) -> AudioType {
 
     // Detect type by its frame header
     if (is_aac(magic)) {
-      return AudioType::kAudioTypeAAC;
+      return kAudioTypeAAC;
     } else if (is_mp3(magic)) {
-      return AudioType::kAudioTypeMP3;
+      return kAudioTypeMP3;
     }
   }
 
@@ -91,11 +92,11 @@ auto DetectAudioType(const std::span<const uint8_t> buffer) -> AudioType {
     switch (magic) {
       case kMagic_ftyp_isom:
       case kMagic_ftyp_iso2:
-        return AudioType::kAudioTypeMP4;
+        return kAudioTypeMP4;
 
       case kMagic_ftyp_MSNV:
       case kMagic_ftyp_NDAS:
-        return AudioType::kAudioTypeM4A;
+        return kAudioTypeM4A;
 
       default: {
         // Do nothing
@@ -105,11 +106,11 @@ auto DetectAudioType(const std::span<const uint8_t> buffer) -> AudioType {
     // Check only first 3 bytes.
     switch (magic >> kShiftRemoveLastByte) {
       case kMagic_ftyp_M4A:
-        return AudioType::kAudioTypeM4A;
+        return kAudioTypeM4A;
       case kMagic_ftyp_M4B:
-        return AudioType::kAudioTypeM4B;
+        return kAudioTypeM4B;
       case kMagic_ftyp_mp4:
-        return AudioType::kAudioTypeMP4;
+        return kAudioTypeMP4;
 
       default: {
         // Do nothing
@@ -117,7 +118,7 @@ auto DetectAudioType(const std::span<const uint8_t> buffer) -> AudioType {
     }
   }
 
-  return AudioType::kUnknownType;
+  return kUnknownType;
 }
 
 }  // namespace parakeet_audio

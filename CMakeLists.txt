@@ -1,8 +1,7 @@
 cmake_minimum_required(VERSION 3.21)
 project(parakeet_audio VERSION 0.0.1 LANGUAGES CXX)
 
-find_program(CLANG_TIDY_EXE NAMES "clang-tidy")
-set(CLANG_TIDY_COMMAND "${CLANG_TIDY_EXE}" "-checks=-*,modernize-*")
+find_program(CLANG_TIDY NAMES "clang-tidy")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 option(PARAKEET_AUDIO_BUILD_TESTING "Build library tests" ON)
@@ -26,7 +25,10 @@ file(GLOB_RECURSE SOURCES
 # Add source to this project's executable.
 add_library(parakeet_audio STATIC ${SOURCES})
 add_library(ParakeetAudio::core ALIAS parakeet_audio)
-set_target_properties(parakeet_audio PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_COMMAND}")
+# Clang-tidy is optional.
+if(CLANG_TIDY)
+  set_target_properties(parakeet_audio PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY}")
+endif()
 
 target_include_directories(parakeet_audio
   PUBLIC
@@ -71,8 +73,11 @@ if(PARAKEET_AUDIO_BUILD_TESTING)
     "gtest_force_shared_crt ON"
   )
 
-  file(GLOB_RECURSE TESTS_SOURCE src/*.test.cc src/*.test.hh)
+  file(GLOB_RECURSE TESTS_SOURCE src/*.test.cxx src/*.test.hh)
   add_executable(parakeet_audio_test ${TESTS_SOURCE})
+  if(CLANG_TIDY)
+    set_target_properties(parakeet_audio_test PROPERTIES CXX_CLANG_TIDY "true")
+  endif()
   target_include_directories(parakeet_audio_test PRIVATE src include)
   target_compile_features(parakeet_audio_test PRIVATE cxx_std_20)
   target_link_libraries(parakeet_audio_test

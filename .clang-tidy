@@ -1,0 +1,7 @@
+Checks:
+  clang-analyzer-*,
+  clang-diagnostic-*,
+  cppcoreguidelines-*,
+  modernize-*,
+  -modernize-use-trailing-return-type,
+HeaderFilterRegex: cxx\.h

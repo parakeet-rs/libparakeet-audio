@@ -1,29 +1,21 @@
 #pragma once
 
+#include "AudioTypes.h"
+
 #include <cstdint>
 #include <span>
-
-#include "AudioTypes.h"
 
 namespace parakeet_audio {
 constexpr size_t kAudioTypeSniffBufferSize = 4096;
 
-AudioType DetectAudioType(const uint8_t* buf, std::size_t len);
+AudioType DetectAudioType(const std::span<const uint8_t> buffer);
 
-inline AudioType DetectAudioType(const std::span<const uint8_t>& data) {
-  return DetectAudioType(data.data(), data.size());
+inline auto IsAudioBufferRecognised(const std::span<const uint8_t> buffer) -> bool {
+  return DetectAudioType(buffer) != AudioType::kUnknownType;
 }
 
-inline bool IsAudioBufferRecognised(const uint8_t* buf, std::size_t len) {
-  return DetectAudioType(buf, len) != AudioType::kUnknownType;
-}
-
-inline bool IsAudioBufferRecognised(const std::span<const uint8_t>& data) {
-  return IsAudioBufferRecognised(data.data(), data.size());
-}
-
-inline const char* DetectAudioExtension(const uint8_t* buf, std::size_t len) {
-  return GetAudioTypeExtension(DetectAudioType(buf, len));
+inline auto DetectAudioExtension(const std::span<const uint8_t> buffer) -> const char* {
+  return GetAudioTypeExtension(DetectAudioType(buffer));
 }
 
 }  // namespace parakeet_audio

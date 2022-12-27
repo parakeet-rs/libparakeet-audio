@@ -1,8 +1,6 @@
 #pragma once
 
 #include <cstdint>
-#include <string>
-#include <vector>
 
 namespace parakeet_audio {
 constexpr uint32_t kAudioTypeMaskLossless = 1 << 5;
@@ -50,9 +48,10 @@ inline const char* GetAudioTypeExtension(AudioType type) {
       return "wma";
     case AudioType::kAudioTypeAPE:
       return "ape";
-  }
 
-  return "bin";
+    default:
+      return "bin";
+  }
 }
 
 inline bool AudioIsLossless(AudioType type) {

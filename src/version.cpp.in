@@ -1,9 +1,9 @@
 #include "parakeet-audio/version.h"
 
-const char* parakeet_audio::get_version() {
+auto parakeet_audio::get_version() -> const char* {
     return "@PROJECT_VERSION@";
 }
 
-const char* parakeet_audio::get_full_version() {
+auto parakeet_audio::get_full_version() -> const char* {
     return "@PROJECT_VERSION@ (git-@LIBPARAKEET_GIT_COMMIT_HASH@, @LIBPARAKEET_GIT_COMMIT_DATE@)";
 }

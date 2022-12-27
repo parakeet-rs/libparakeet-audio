@@ -1,5 +1,5 @@
 {
-    "sonarlint.pathToCompileCommands": "${workspaceFolder}\\cmake-build-ninja\\compile_commands.json",
+    "sonarlint.pathToCompileCommands": "${workspaceFolder}/build/compile_commands.json",
     "files.associations": {
         "LICENSE-*": "plaintext",
         "*.json5": "jsonc",
@@ -78,6 +78,16 @@
         "xmemory": "cpp",
         "xstddef": "cpp",
         "xtr1common": "cpp",
-        "xtree": "cpp"
+        "xtree": "cpp",
+        "cstdarg": "cpp",
+        "cwctype": "cpp",
+        "*.tcc": "cpp",
+        "memory_resource": "cpp",
+        "numeric": "cpp",
+        "random": "cpp",
+        "string_view": "cpp",
+        "numbers": "cpp",
+        "semaphore": "cpp",
+        "cinttypes": "cpp"
     }
 }

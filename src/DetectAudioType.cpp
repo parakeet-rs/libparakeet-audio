@@ -1,18 +1,18 @@
-#include "parakeet-audio/DetectAudioType.h"
-#include "AudioMetadata.h"
+#include "parakeet_endian.h"
 
-#include "endian.h"
+#include "AudioMetadata.h"
+#include "parakeet-audio/DetectAudioType.h"
 
 namespace parakeet_audio {
 
-inline bool is_mp3(uint32_t magic) {
+inline auto is_mp3(uint32_t magic) -> bool {
   // Frame-sync, should have first 11-bits set to 1.
   constexpr uint32_t kMP3AndMasks = 0b1111'1111'1110'0000u << 16;
   constexpr uint32_t kMP3Expected = 0b1111'1111'1110'0000u << 16;
   return ((magic & kMP3AndMasks) == kMP3Expected);
 }
 
-inline bool is_aac(uint32_t magic) {
+inline auto is_aac(uint32_t magic) -> bool {
   // Frame-sync, should have first 12-bits set to 1.
   constexpr uint32_t kAacAndMasks = 0b1111'1111'1111'0110 << 16;
   constexpr uint32_t kAacExpected = 0b1111'1111'1111'0000 << 16;
@@ -38,19 +38,21 @@ constexpr uint32_t kMagic_ftyp_M4B = 0x4d'34'42u;  // iTunes AAC-LC (.M4B) Audio
 constexpr uint32_t kMagic_ftyp_mp4 = 0x6D'70'34u;  // MP4 container, used by
 // QQ Music (E-AC-3 JOC)
 
-AudioType DetectAudioType(const uint8_t* buf, std::size_t len) {
+auto DetectAudioType(const std::span<const uint8_t> buffer) -> AudioType {
+  auto buf = buffer;
+
   // Seek optional id3 tag.
-  std::size_t audio_header_meta_size = GetAudioHeaderMetadataSize(buf, len);
-  if (audio_header_meta_size > len) {
-    return AudioType::kUnknownType;
-  } else if (audio_header_meta_size > 0) {
-    buf += audio_header_meta_size;
-    len -= audio_header_meta_size;
+  if (auto meta_len = GetAudioHeaderMetadataSize(buffer); meta_len > 0) {
+    if (meta_len > buffer.size()) {
+      return AudioType::kUnknownType;
+    }
+
+    buf = std::span{&buf[meta_len], buf.size() - meta_len};
   }
 
   // Check 4 byte magic header
-  if (len >= sizeof(uint32_t)) {
-    uint32_t magic = ReadBigEndian<uint32_t>(buf);
+  if (buf.size() >= sizeof(uint32_t)) {
+    auto magic = ReadBigEndian<uint32_t>(&buf[0]);
 
     switch (magic) {
       case kMagic_fLaC:
@@ -65,6 +67,9 @@ AudioType DetectAudioType(const uint8_t* buf, std::size_t len) {
         return AudioType::kAudioTypeWAV;
       case kMagic__MAC:
         return AudioType::kAudioTypeAPE;
+      default: {
+        // Do nothing
+      }
     }
 
     // Detect type by its frame header
@@ -76,27 +81,38 @@ AudioType DetectAudioType(const uint8_t* buf, std::size_t len) {
   }
 
   // Check MP4 container.
-  if (len >= 16) {
-    if (ReadBigEndian<uint32_t>(buf + 4) == kMagic_ftyp) {
-      uint32_t magic = ReadBigEndian<uint32_t>(buf + 8);
+  constexpr std::size_t kMP4DetectMinLen = 0x10;
+  constexpr std::size_t kMP4OffsetFtypFieldKey = 0x04;
+  constexpr std::size_t kMP4OffsetFtypFieldValue = 0x08;
+  constexpr std::size_t kShiftRemoveLastByte = 0x08;
+  if (buf.size() >= kMP4DetectMinLen && ReadBigEndian<uint32_t>(&buf[kMP4OffsetFtypFieldKey]) == kMagic_ftyp) {
+    auto magic = ReadBigEndian<uint32_t>(&buf[kMP4OffsetFtypFieldValue]);
 
-      switch (magic) {
-        case kMagic_ftyp_isom:
-        case kMagic_ftyp_iso2:
-          return AudioType::kAudioTypeMP4;
+    switch (magic) {
+      case kMagic_ftyp_isom:
+      case kMagic_ftyp_iso2:
+        return AudioType::kAudioTypeMP4;
 
-        case kMagic_ftyp_MSNV:
-        case kMagic_ftyp_NDAS:
-          return AudioType::kAudioTypeM4A;
+      case kMagic_ftyp_MSNV:
+      case kMagic_ftyp_NDAS:
+        return AudioType::kAudioTypeM4A;
+
+      default: {
+        // Do nothing
       }
+    }
 
-      switch (magic >> 8) {
-        case kMagic_ftyp_M4A:
-          return AudioType::kAudioTypeM4A;
-        case kMagic_ftyp_M4B:
-          return AudioType::kAudioTypeM4B;
-        case kMagic_ftyp_mp4:
-          return AudioType::kAudioTypeMP4;
+    // Check only first 3 bytes.
+    switch (magic >> kShiftRemoveLastByte) {
+      case kMagic_ftyp_M4A:
+        return AudioType::kAudioTypeM4A;
+      case kMagic_ftyp_M4B:
+        return AudioType::kAudioTypeM4B;
+      case kMagic_ftyp_mp4:
+        return AudioType::kAudioTypeMP4;
+
+      default: {
+        // Do nothing
       }
     }
   }

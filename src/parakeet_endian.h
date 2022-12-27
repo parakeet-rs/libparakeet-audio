@@ -9,8 +9,13 @@
 #define __builtin_bswap64 _byteswap_uint64
 #define __builtin_bswap32 _byteswap_ulong
 #define __builtin_bswap16 _byteswap_ushort
+#elif __has_include(<byteswap.h>)
+#include <byteswap.h>
+#define __builtin_bswap64 bswap_64
+#define __builtin_bswap32 bswap_32
+#define __builtin_bswap16 bswap_16
 #elif !defined(__has_builtin) || !__has_builtin(__builtin_bswap64)
-#error "__builtin_bswap macro/methods missing."
+#error __builtin_bswap macro/methods missing.
 #endif
 
 namespace parakeet_audio {
@@ -56,25 +61,25 @@ constexpr T swap_bytes(T input) {
 // Otherwise: swap
 
 template <std::integral T>
-constexpr inline T SwapHostToLittleEndian(T input) {
+constexpr T SwapHostToLittleEndian(T input) {
   if constexpr (detail::is_le) return input;
   return detail::swap_bytes(input);
 }
 
 template <std::integral T>
-constexpr inline T SwapHostToBigEndian(T input) {
+constexpr T SwapHostToBigEndian(T input) {
   if constexpr (detail::is_be) return input;
   return detail::swap_bytes(input);
 }
 
 template <std::integral T>
-constexpr inline T SwapLittleEndianToHost(T input) {
+constexpr T SwapLittleEndianToHost(T input) {
   if constexpr (detail::is_le) return input;
   return detail::swap_bytes(input);
 }
 
 template <std::integral T>
-constexpr inline T SwapBigEndianToHost(T input) {
+constexpr T SwapBigEndianToHost(T input) {
   if constexpr (detail::is_be) return input;
   return detail::swap_bytes(input);
 }

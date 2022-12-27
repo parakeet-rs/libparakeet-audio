@@ -12,7 +12,7 @@ inline auto ParseID3SyncSafeInt(const uint8_t* p) -> int32_t {
   constexpr uint32_t kU32ByteMask3 = 0x0000FF00;
   constexpr uint32_t kU32ByteMask4 = 0x000000FF;
 
-  const auto value = ReadLittleEndian<uint32_t>(&p);
+  const auto value = ReadBigEndian<uint32_t>(p);
 
   // Sync safe int should use only lower 7-bits of each byte.
   if ((value & kUnsafeIntMask32) != 0) {
@@ -53,8 +53,10 @@ auto GetID3HeaderSize(const std::span<const uint8_t> buffer) -> std::size_t {
     //      6    uint32_t(inner_tag_size)
     //     10    byte[inner_tag_size] id3v2 data
     //     ??    byte[*] original_file_content
-    const auto id3v2InnerTagSize = ParseID3SyncSafeInt(&buffer[6]);
-    return kID3V2HeaderSize + id3v2InnerTagSize;
+
+    if (const auto inner_size = ParseID3SyncSafeInt(&buffer[6]); inner_size > 0) {
+      return kID3V2HeaderSize + inner_size;
+    }
   }
 
   return 0;

@@ -90,4 +90,5 @@ if(PARAKEET_AUDIO_BUILD_TESTING)
 
   include(GoogleTest)
   gtest_discover_tests(parakeet_audio_test)
+  include(CTest)
 endif()

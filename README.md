@@ -6,6 +6,35 @@ A simple audio detection library.
 
 Licensed under the [MIT License](LICENSE.txt).
 
+## Usage
+
+```cmake
+# cmake
+# include CPM
+CPMAddPackage(
+  NAME libparakeet_audio
+  GITHUB_REPOSITORY parakeet-rs/libparakeet-audio
+  GIT_TAG v0.1.0
+  OPTIONS
+      "PARAKEET_AUDIO_BUILD_TESTING OFF"
+)
+
+target_link_libraries(YOUR_PROJECT_NAME PRIVATE LibParakeet::Audio)
+```
+
+```cpp
+#include <parakeet-audio/DetectAudioType.h>
+
+#include <cstdint>
+#include <cstdio>
+
+int main() {
+  uint8_t test_data[] = {'f', 'L', 'a', 'C'};
+  auto ext = parakeet_audio::DetectAudioExtension(test_data);
+  printf("detected audio ext: %s\n", ext);
+}
+```
+
 ## References
 
 - Magic numbers:

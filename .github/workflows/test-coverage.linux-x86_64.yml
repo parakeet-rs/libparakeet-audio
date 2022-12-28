@@ -1,4 +1,4 @@
-name: Test & Coverage (Linux x86_64)
+name: Coverage (Linux x86_64)
 
 on:
   push:

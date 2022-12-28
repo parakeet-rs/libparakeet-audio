@@ -56,28 +56,3 @@ TEST(AudioDetection, AAC) {
   EXPECT_EQ(AudioIsLossless(detected_type), false);
   EXPECT_STREQ(GetAudioTypeExtension(detected_type), "aac");
 }
-
-TEST(AudioDetection, MP3_with_ID3) {
-  std::array<uint8_t, 0xB0> header = {0x49, 0x44, 0x33, 0x04, 0x00, 0x00, 0x00, 0x00, 0x01, 0x08};
-  parakeet_audio::WriteLittleEndian<uint32_t>(&header[0x92], 0x50FBFF);
-
-  auto detected_type = DetectAudioType(header);
-  EXPECT_EQ(detected_type, AudioType::kAudioTypeMP3);
-  EXPECT_EQ(AudioIsLossless(detected_type), false);
-  EXPECT_STREQ(GetAudioTypeExtension(detected_type), "mp3");
-}
-
-TEST(AudioDetectionSadPath, CrouptedID3) {
-  std::array<uint8_t, 0xB0> header = {0x49, 0x44, 0x33, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-  parakeet_audio::WriteLittleEndian<uint32_t>(&header[0x92], 0x50FBFF);
-
-  auto detected_type = DetectAudioType(header);
-  EXPECT_EQ(detected_type, AudioType::kUnknownType);
-}
-
-TEST(AudioDetectionSadPath, ID3TooLarge) {
-  std::array<uint8_t, 0xFF> header = {0x49, 0x44, 0x33, 0x04, 0x00, 0x00, 0x7F, 0x7F, 0x7F, 0x7F};
-
-  auto detected_type = DetectAudioType(header);
-  EXPECT_EQ(detected_type, AudioType::kUnknownType);
-}

@@ -24,28 +24,28 @@ inline auto ParseID3SyncSafeInt(const uint8_t* p) -> int32_t {
 }
 
 auto GetID3HeaderSize(const std::span<const uint8_t> buffer) -> std::size_t {
-  constexpr std::size_t kID3HeaderMinLen = 10;
+  constexpr std::size_t kID3HeaderMinSize = 10;
 
   constexpr std::size_t kID3V1Size = 128;
   constexpr uint32_t kID3v1Masks = 0xFF'FF'FF'00u;  // Select first 3 bytes
-  constexpr uint32_t kID3v1Value = 0x54'41'47'00u;  // 'TAG\x00'
+  constexpr uint32_t kID3v1Magic = 0x54'41'47'00u;  // 'TAG\x00'
 
   constexpr std::size_t kID3V2HeaderSize = 10;
   constexpr uint32_t kID3v2Masks = 0xFF'FF'FF'00u;  // Select first 3 bytes
-  constexpr uint32_t kID3v2Value = 0x49'44'33'00u;  // 'ID3\x00'
+  constexpr uint32_t kID3v2Magic = 0x49'44'33'00u;  // 'ID3\x00'
 
-  if (buffer.size() < kID3HeaderMinLen) {
+  if (buffer.size() < kID3HeaderMinSize) {
     return 0;
   }
 
   const auto magic = parakeet_audio::ReadBigEndian<uint32_t>(&buffer[0]);
 
   // ID3v1 and ID3v1.1: flat 128 bytes
-  if ((magic & kID3v1Masks) == kID3v1Value) {
+  if ((magic & kID3v1Masks) == kID3v1Magic) {
     return kID3V1Size;
   }
 
-  if ((magic & kID3v2Masks) == kID3v2Value) {
+  if ((magic & kID3v2Masks) == kID3v2Magic) {
     // offset    value
     //      0    header('ID3')
     //      3    uint8_t(ver_major) uint8_t(ver_minor)

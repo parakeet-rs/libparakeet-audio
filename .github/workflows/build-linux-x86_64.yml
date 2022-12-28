@@ -68,6 +68,14 @@ jobs:
           path-to-lcov: "libparakeet_audio.info"
           flag-name: "Unit Test"
 
+      - name: "Upload Coverage data to artifact"
+        uses: actions/upload-artifact@v3
+        with:
+          name: libparakeet-audio-amd64.coverage
+          path: |
+            build/libparakeet_audio.info
+            build/coverage
+
       - name: "📦 Package static libs..."
         shell: bash
         run: |

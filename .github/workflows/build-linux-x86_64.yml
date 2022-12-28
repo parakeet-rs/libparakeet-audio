@@ -33,7 +33,7 @@ jobs:
         run: |
           mkdir -p build
           sudo apt-get update
-          sudo apt-get install ninja-build
+          sudo apt-get install ninja-build lcov
 
       - name: "🔧 CMake: Configure"
         shell: bash

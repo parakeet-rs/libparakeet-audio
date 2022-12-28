@@ -52,7 +52,8 @@ jobs:
         working-directory: build
         run: |
           ctest --output-on-failure
-          lcov --base-directory . --directory . -c --remove libparakeet_audio.info \
+          lcov --base-directory . --directory . -c -o libparakeet_audio.info
+          lcov --remove libparakeet_audio.info \
             "/usr*" \
             "*.test.cxx" \
             "*googlemock*" \

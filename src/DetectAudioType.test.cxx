@@ -51,18 +51,6 @@ TEST(AudioDetection, DFF) {
   EXPECT_STREQ(GetAudioTypeExtension(detected_type), "dff");
 }
 
-TEST(AudioDetection, M4A) {
-  std::array<uint8_t, 0x20> header = {
-      0x00, 0x00, 0x00, 0x20, 'f', 't', 'y', 'p', 'M', '4', 'A', ' ', 0x00, 0x00, 0x00, 0x01,  //
-      'i',  's',  'o',  'm',  'i', 's', 'o', '2', 'M', '4', 'A', ' ', 'm',  'p',  '4',  '2'    //
-  };
-
-  auto detected_type = DetectAudioType(header);
-  EXPECT_EQ(detected_type, AudioType::kAudioTypeM4A);
-  EXPECT_EQ(AudioIsLossless(detected_type), false);
-  EXPECT_STREQ(GetAudioTypeExtension(detected_type), "m4a");
-}
-
 TEST(AudioDetection, AAC) {
   std::array<uint8_t, 0x20> header = {
       0xFF, 0xF1, 0x50, 0x80, 0x06, 0xFF, 0xFC, 0xDE, 0x04, 0x00, 0x4C, 0x61, 0x76, 0x63, 0x35, 0x38,  //
@@ -82,4 +70,12 @@ TEST(AudioDetection, WMA) {
   EXPECT_EQ(detected_type, AudioType::kAudioTypeWMA);
   EXPECT_EQ(AudioIsLossless(detected_type), false);
   EXPECT_STREQ(GetAudioTypeExtension(detected_type), "wma");
+}
+
+TEST(AudioDetection, UnknownType) {
+  std::array<uint8_t, 0x20> header = {0};
+
+  auto detected_type = DetectAudioType(header);
+  EXPECT_EQ(detected_type, AudioType::kUnknownType);
+  EXPECT_STREQ(GetAudioTypeExtension(detected_type), "bin");
 }

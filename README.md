@@ -1,5 +1,7 @@
 # libparakeet-audio
 
+[![Coverage Status](https://coveralls.io/repos/github/parakeet-rs/libparakeet-audio/badge.svg?branch=main)](https://coveralls.io/github/parakeet-rs/libparakeet-audio?branch=main)
+
 A simple audio detection library.
 
 ## License

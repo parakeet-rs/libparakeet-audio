@@ -33,16 +33,22 @@ TEST(AudioDetection, FLAC) {
   EXPECT_STREQ(GetAudioTypeExtension(detected_type), "flac");
 }
 
-TEST(AudioDetection, M4A) {
-  std::array<uint8_t, 0x20> header = {
-      0x00, 0x00, 0x00, 0x20, 'f', 't', 'y', 'p', 'M', '4', 'A', ' ', 0x00, 0x00, 0x00, 0x01,  //
-      'i',  's',  'o',  'm',  'i', 's', 'o', '2', 'M', '4', 'A', ' ', 'm',  'p',  '4',  '2'    //
-  };
+TEST(AudioDetection, WAV) {
+  std::array<uint8_t, 0x20> header = {'R', 'I', 'F', 'F'};
 
   auto detected_type = DetectAudioType(header);
-  EXPECT_EQ(detected_type, AudioType::kAudioTypeM4A);
-  EXPECT_EQ(AudioIsLossless(detected_type), false);
-  EXPECT_STREQ(GetAudioTypeExtension(detected_type), "m4a");
+  EXPECT_EQ(detected_type, AudioType::kAudioTypeWAV);
+  EXPECT_EQ(AudioIsLossless(detected_type), true);
+  EXPECT_STREQ(GetAudioTypeExtension(detected_type), "wav");
+}
+
+TEST(AudioDetection, DFF) {
+  std::array<uint8_t, 0x20> header = {'F', 'R', 'M', '8'};
+
+  auto detected_type = DetectAudioType(header);
+  EXPECT_EQ(detected_type, AudioType::kAudioTypeDFF);
+  EXPECT_EQ(AudioIsLossless(detected_type), true);
+  EXPECT_STREQ(GetAudioTypeExtension(detected_type), "dff");
 }
 
 TEST(AudioDetection, AAC) {
@@ -57,27 +63,19 @@ TEST(AudioDetection, AAC) {
   EXPECT_STREQ(GetAudioTypeExtension(detected_type), "aac");
 }
 
-TEST(AudioDetection, MP3_with_ID3) {
-  std::array<uint8_t, 0xB0> header = {0x49, 0x44, 0x33, 0x04, 0x00, 0x00, 0x00, 0x00, 0x01, 0x08};
-  parakeet_audio::WriteLittleEndian<uint32_t>(&header[0x92], 0x50FBFF);
+TEST(AudioDetection, WMA) {
+  std::array<uint8_t, 0x20> header = {0x30, 0x26, 0xB2, 0x75};
 
   auto detected_type = DetectAudioType(header);
-  EXPECT_EQ(detected_type, AudioType::kAudioTypeMP3);
+  EXPECT_EQ(detected_type, AudioType::kAudioTypeWMA);
   EXPECT_EQ(AudioIsLossless(detected_type), false);
-  EXPECT_STREQ(GetAudioTypeExtension(detected_type), "mp3");
+  EXPECT_STREQ(GetAudioTypeExtension(detected_type), "wma");
 }
 
-TEST(AudioDetectionSadPath, CrouptedID3) {
-  std::array<uint8_t, 0xB0> header = {0x49, 0x44, 0x33, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-  parakeet_audio::WriteLittleEndian<uint32_t>(&header[0x92], 0x50FBFF);
+TEST(AudioDetection, UnknownType) {
+  std::array<uint8_t, 0x20> header = {0};
 
   auto detected_type = DetectAudioType(header);
   EXPECT_EQ(detected_type, AudioType::kUnknownType);
-}
-
-TEST(AudioDetectionSadPath, ID3TooLarge) {
-  std::array<uint8_t, 0xFF> header = {0x49, 0x44, 0x33, 0x04, 0x00, 0x00, 0x7F, 0x7F, 0x7F, 0x7F};
-
-  auto detected_type = DetectAudioType(header);
-  EXPECT_EQ(detected_type, AudioType::kUnknownType);
+  EXPECT_STREQ(GetAudioTypeExtension(detected_type), "bin");
 }

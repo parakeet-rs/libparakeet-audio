@@ -15,12 +15,12 @@ enum class AudioType : uint32_t {
   kAudioTypeM4A = 4,
   kAudioTypeM4B = 5,
   kAudioTypeMP4 = 6,
+  kAudioTypeWMA = 7,  // While possible, it is rare to find a lossless WMA file.
 
   // Lossless
   kAudioTypeFLAC = kAudioTypeMaskLossless | 1,
   kAudioTypeDFF = kAudioTypeMaskLossless | 2,
   kAudioTypeWAV = kAudioTypeMaskLossless | 3,
-  kAudioTypeWMA = kAudioTypeMaskLossless | 4,
   kAudioTypeAPE = kAudioTypeMaskLossless | 5,
 };
 

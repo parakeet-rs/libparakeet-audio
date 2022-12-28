@@ -35,8 +35,7 @@ constexpr uint32_t kMagic_ftyp_iso2 = 0x69'73'6F'32u;  // iso2 - MP4 (audio only
 
 constexpr uint32_t kMagic_ftyp_M4A = 0x4d'34'41u;  // iTunes AAC-LC (.M4A) Audio
 constexpr uint32_t kMagic_ftyp_M4B = 0x4d'34'42u;  // iTunes AAC-LC (.M4B) Audio Book
-constexpr uint32_t kMagic_ftyp_mp4 = 0x6D'70'34u;  // MP4 container, used by
-// QQ Music (E-AC-3 JOC)
+constexpr uint32_t kMagic_ftyp_mp4 = 0x6D'70'34u;  // MP4 container, used by QQ Music (E-AC-3 JOC)
 
 auto DetectAudioType(const std::span<const uint8_t> buffer) -> AudioType {
   using enum AudioType;
@@ -92,9 +91,9 @@ auto DetectAudioType(const std::span<const uint8_t> buffer) -> AudioType {
     switch (magic) {
       case kMagic_ftyp_isom:
       case kMagic_ftyp_iso2:
+      case kMagic_ftyp_MSNV:
         return kAudioTypeMP4;
 
-      case kMagic_ftyp_MSNV:
       case kMagic_ftyp_NDAS:
         return kAudioTypeM4A;
 

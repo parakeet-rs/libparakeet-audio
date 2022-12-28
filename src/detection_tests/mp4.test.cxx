@@ -61,3 +61,13 @@ TEST(AudioDetection, MP4_Generic_MP4_Container_with_dby1) {
   EXPECT_EQ(AudioIsLossless(detected_type), false);
   EXPECT_STREQ(GetAudioTypeExtension(detected_type), "mp4");
 }
+
+TEST(AudioDetection, MP4_Container_with_unsupported_type) {
+  std::array<uint8_t, 0x20> header = {
+      0x00, 0x00, 0x00, 0x10, 'f', 't', 'y', 'p', 'u', 'n', 'k', '?', 0x00, 0x00, 0x00, 0x01,
+  };
+
+  auto detected_type = DetectAudioType(header);
+  EXPECT_EQ(detected_type, AudioType::kUnknownType);
+  EXPECT_STREQ(GetAudioTypeExtension(detected_type), "bin");
+}

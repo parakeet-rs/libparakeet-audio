@@ -59,3 +59,10 @@ TEST(AudioDetectionSadPath, ID3TooLarge) {
   auto detected_type = DetectAudioType(header);
   EXPECT_EQ(detected_type, AudioType::kUnknownType);
 }
+
+TEST(AudioDetectionSadPath, ID3_buffer_too_small) {
+  std::array<uint8_t, 0x04> header = {0x49, 0x44, 0x33, 0x04};
+
+  auto detected_type = DetectAudioType(header);
+  EXPECT_EQ(detected_type, AudioType::kUnknownType);
+}

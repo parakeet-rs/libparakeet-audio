@@ -52,12 +52,11 @@ jobs:
         working-directory: build
         run: |
           ctest --output-on-failure
-          lcov --base-directory . --directory . -c -o libparakeet_audio.info
-          lcov --remove libparakeet_audio.info \
-            "/usr*" \
-            "*.test.cxx" \
-            "*googlemock*" \
-            "*googletest*" \
+          lcov --base-directory . --directory . -c \
+            --exclude '/usr*' \
+            --exclude "*.test.cxx" \
+            --exclude "*googlemock*" \
+            --exclude "*googletest*" \
             -o libparakeet_audio.info
           genhtml -o ./coverage -t "libparakeet_audio test coverage" --num-spaces 4 libparakeet_audio.info
 

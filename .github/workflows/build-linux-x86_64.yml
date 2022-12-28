@@ -51,7 +51,7 @@ jobs:
       - name: "💣 CTest: Unit Test"
         working-directory: build
         run: |
-          ctest --output-on-failure
+          ctest -T Test -T Coverage --output-on-failure
           lcov --base-directory . --directory . -c \
             --exclude '/usr*' \
             --exclude "*.test.cxx" \

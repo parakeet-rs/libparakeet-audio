@@ -24,7 +24,7 @@ file(GLOB_RECURSE SOURCES
 
 # Add source to this project's executable.
 add_library(parakeet_audio STATIC ${SOURCES})
-add_library(ParakeetAudio::core ALIAS parakeet_audio)
+add_library(LibParakeet::Audio ALIAS parakeet_audio)
 # Clang-tidy is optional.
 if(CLANG_TIDY)
   set_target_properties(parakeet_audio PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY}")

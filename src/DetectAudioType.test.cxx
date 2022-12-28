@@ -33,6 +33,24 @@ TEST(AudioDetection, FLAC) {
   EXPECT_STREQ(GetAudioTypeExtension(detected_type), "flac");
 }
 
+TEST(AudioDetection, WAV) {
+  std::array<uint8_t, 0x20> header = {'R', 'I', 'F', 'F'};
+
+  auto detected_type = DetectAudioType(header);
+  EXPECT_EQ(detected_type, AudioType::kAudioTypeWAV);
+  EXPECT_EQ(AudioIsLossless(detected_type), true);
+  EXPECT_STREQ(GetAudioTypeExtension(detected_type), "wav");
+}
+
+TEST(AudioDetection, DFF) {
+  std::array<uint8_t, 0x20> header = {'F', 'R', 'M', '8'};
+
+  auto detected_type = DetectAudioType(header);
+  EXPECT_EQ(detected_type, AudioType::kAudioTypeDFF);
+  EXPECT_EQ(AudioIsLossless(detected_type), true);
+  EXPECT_STREQ(GetAudioTypeExtension(detected_type), "dff");
+}
+
 TEST(AudioDetection, M4A) {
   std::array<uint8_t, 0x20> header = {
       0x00, 0x00, 0x00, 0x20, 'f', 't', 'y', 'p', 'M', '4', 'A', ' ', 0x00, 0x00, 0x00, 0x01,  //
@@ -55,4 +73,13 @@ TEST(AudioDetection, AAC) {
   EXPECT_EQ(detected_type, AudioType::kAudioTypeAAC);
   EXPECT_EQ(AudioIsLossless(detected_type), false);
   EXPECT_STREQ(GetAudioTypeExtension(detected_type), "aac");
+}
+
+TEST(AudioDetection, WMA) {
+  std::array<uint8_t, 0x20> header = {0x30, 0x26, 0xB2, 0x75};
+
+  auto detected_type = DetectAudioType(header);
+  EXPECT_EQ(detected_type, AudioType::kAudioTypeWMA);
+  EXPECT_EQ(AudioIsLossless(detected_type), false);
+  EXPECT_STREQ(GetAudioTypeExtension(detected_type), "wma");
 }

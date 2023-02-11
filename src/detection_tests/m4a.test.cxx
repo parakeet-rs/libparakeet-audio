@@ -23,7 +23,7 @@ TEST(AudioDetection, M4A) {
       'i',  's',  'o',  'm',  'i', 's', 'o', '2', 'M', '4', 'A', ' ', 'm',  'p',  '4',  '2',
   };
 
-  auto detected_type = DetectAudioType(header);
+  auto detected_type = DetectAudioType(header.data(), header.size());
   EXPECT_EQ(detected_type, AudioType::kAudioTypeM4A);
   EXPECT_EQ(AudioIsLossless(detected_type), false);
   EXPECT_STREQ(GetAudioTypeExtension(detected_type), "m4a");
@@ -34,7 +34,7 @@ TEST(AudioDetection, M4B) {
       0x00, 0x00, 0x00, 0x10, 'f', 't', 'y', 'p', 'M', '4', 'B', ' ', 0x00, 0x00, 0x00, 0x01,
   };
 
-  auto detected_type = DetectAudioType(header);
+  auto detected_type = DetectAudioType(header.data(), header.size());
   EXPECT_EQ(detected_type, AudioType::kAudioTypeM4B);
   EXPECT_EQ(AudioIsLossless(detected_type), false);
   EXPECT_STREQ(GetAudioTypeExtension(detected_type), "m4b");
@@ -45,7 +45,7 @@ TEST(AudioDetection, M4A_with_NeroAAC) {
       0x00, 0x00, 0x00, 0x10, 'f', 't', 'y', 'p', 'N', 'D', 'A', 'S', 0x00, 0x00, 0x00, 0x01,
   };
 
-  auto detected_type = DetectAudioType(header);
+  auto detected_type = DetectAudioType(header.data(), header.size());
   EXPECT_EQ(detected_type, AudioType::kAudioTypeM4A);
   EXPECT_EQ(AudioIsLossless(detected_type), false);
   EXPECT_STREQ(GetAudioTypeExtension(detected_type), "m4a");

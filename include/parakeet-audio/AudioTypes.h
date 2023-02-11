@@ -25,32 +25,31 @@ enum class AudioType : uint32_t {
 };
 
 inline const char* GetAudioTypeExtension(AudioType type) {
-  using enum AudioType;
   switch (type) {
       // Lossy types
-    case kAudioTypeOGG:
+    case AudioType::kAudioTypeOGG:
       return "ogg";
-    case kAudioTypeAAC:
+    case AudioType::kAudioTypeAAC:
       return "aac";
-    case kAudioTypeMP3:
+    case AudioType::kAudioTypeMP3:
       return "mp3";
-    case kAudioTypeM4A:
+    case AudioType::kAudioTypeM4A:
       return "m4a";
-    case kAudioTypeM4B:
+    case AudioType::kAudioTypeM4B:
       return "m4b";
-    case kAudioTypeMP4:
+    case AudioType::kAudioTypeMP4:
       return "mp4";
 
       // Lossless types
-    case kAudioTypeFLAC:
+    case AudioType::kAudioTypeFLAC:
       return "flac";
-    case kAudioTypeDFF:
+    case AudioType::kAudioTypeDFF:
       return "dff";
-    case kAudioTypeWAV:
+    case AudioType::kAudioTypeWAV:
       return "wav";
-    case kAudioTypeWMA:
+    case AudioType::kAudioTypeWMA:
       return "wma";
-    case kAudioTypeAPE:
+    case AudioType::kAudioTypeAPE:
       return "ape";
 
     default:

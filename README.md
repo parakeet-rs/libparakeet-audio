@@ -12,14 +12,14 @@ Licensed under the [MIT License](LICENSE.txt).
 # cmake
 # include CPM
 CPMAddPackage(
-  NAME libparakeet_audio
+  NAME parakeet_audio
   GITHUB_REPOSITORY parakeet-rs/libparakeet-audio
   GIT_TAG v0.1.0
   OPTIONS
       "PARAKEET_AUDIO_BUILD_TESTING OFF"
 )
 
-target_link_libraries(YOUR_PROJECT_NAME PRIVATE LibParakeet::Audio)
+target_link_libraries(YOUR_PROJECT_NAME PRIVATE parakeet::audio)
 ```
 
 ```cpp

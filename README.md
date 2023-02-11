@@ -12,9 +12,9 @@ Licensed under the [MIT License](LICENSE.txt).
 # cmake
 # include CPM
 CPMAddPackage(
-  NAME parakeet_audio
+  NAME parakeet-audio
   GITHUB_REPOSITORY parakeet-rs/libparakeet-audio
-  GIT_TAG v0.1.0
+  GIT_TAG v0.1.1
   OPTIONS
       "PARAKEET_AUDIO_BUILD_TESTING OFF"
 )
@@ -30,7 +30,7 @@ target_link_libraries(YOUR_PROJECT_NAME PRIVATE parakeet::audio)
 
 int main() {
   uint8_t test_data[] = {'f', 'L', 'a', 'C'};
-  auto ext = parakeet_audio::DetectAudioExtension(test_data);
+  auto ext = parakeet_audio::DetectAudioExtension(&test_data[0], 4);
   printf("detected audio ext: %s\n", ext);
 }
 ```

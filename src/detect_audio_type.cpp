@@ -1,7 +1,7 @@
 #include <cstdint>
 #include "parakeet_endian.h"
 
-#include "audio_metadata.h"
+#include "parakeet-audio/audio_metadata.h"
 #include "parakeet-audio/detect_audio_type.h"
 
 namespace parakeet_audio {

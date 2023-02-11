@@ -6,6 +6,7 @@
 #include <span>
 
 namespace parakeet_audio {
+
 /**
  * @brief Get the ID3 header size.
  * @private

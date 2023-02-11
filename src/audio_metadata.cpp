@@ -1,4 +1,4 @@
-#include "audio_metadata.h"
+#include "parakeet-audio/audio_metadata.h"
 #include "parakeet_endian.h"
 
 #include <algorithm>

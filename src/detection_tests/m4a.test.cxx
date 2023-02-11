@@ -1,4 +1,4 @@
-#include "parakeet-audio/DetectAudioType.h"
+#include "parakeet-audio/detect_audio_type.h"
 
 #include "parakeet_endian.h"
 

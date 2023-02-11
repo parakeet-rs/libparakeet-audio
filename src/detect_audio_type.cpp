@@ -1,8 +1,8 @@
 #include <cstdint>
 #include "parakeet_endian.h"
 
-#include "AudioMetadata.h"
-#include "parakeet-audio/DetectAudioType.h"
+#include "audio_metadata.h"
+#include "parakeet-audio/detect_audio_type.h"
 
 namespace parakeet_audio {
 
@@ -75,7 +75,8 @@ AudioType DetectAudioType(const uint8_t* buffer, size_t buffer_len) {
     // Detect type by its frame header
     if (is_aac(magic)) {
       return AudioType::kAudioTypeAAC;
-    } else if (is_mp3(magic)) {
+    }
+    if (is_mp3(magic)) {
       return AudioType::kAudioTypeMP3;
     }
   }

@@ -23,7 +23,7 @@ target_link_libraries(YOUR_PROJECT_NAME PRIVATE LibParakeet::Audio)
 ```
 
 ```cpp
-#include <parakeet-audio/DetectAudioType.h>
+#include <parakeet-audio/detect_audio_type.h>
 
 #include <cstdint>
 #include <cstdio>

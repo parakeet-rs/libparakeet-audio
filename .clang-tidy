@@ -1,7 +1,21 @@
-Checks:
-  clang-analyzer-*,
-  clang-diagnostic-*,
-  cppcoreguidelines-*,
-  modernize-*,
-  -modernize-use-trailing-return-type,
-HeaderFilterRegex: cxx\.h
+---
+Checks: |
+    -*,
+    clang-analyzer-*,
+    performance-*, readability-*,
+    cppcoreguidelines-*,
+        -cppcoreguidelines-pro-bounds-pointer-arithmetic,
+        -cppcoreguidelines-pro-type-union-access,
+        -cppcoreguidelines-pro-bounds-constant-array-index,
+    mpi-*,misc-*,
+    modernize-*,
+        -modernize-use-trailing-return-type,
+    bugprone-*,
+        -bugprone-easily-swappable-parameters,
+WarningsAsErrors: true
+HeaderFilterRegex: ""
+AnalyzeTemporaryDtors: false
+FormatStyle: .clang-format
+CheckOptions:
+    - key: cppcoreguidelines-special-member-functions.AllowSoleDefaultDtor
+      value: true

@@ -1,4 +1,4 @@
-#include "parakeet-audio/DetectAudioType.h"
+#include "parakeet-audio/detect_audio_type.h"
 
 #include "parakeet_endian.h"
 
@@ -27,7 +27,7 @@ TEST(AudioDetection, APEv2_with_APE) {
   header[0x52] = 'C';
   header[0x53] = ' ';
 
-  auto detected_type = DetectAudioType(header);
+  auto detected_type = DetectAudioType(header.data(), header.size());
   EXPECT_EQ(detected_type, AudioType::kAudioTypeAPE);
   EXPECT_EQ(AudioIsLossless(detected_type), true);
   EXPECT_STREQ(GetAudioTypeExtension(detected_type), "ape");

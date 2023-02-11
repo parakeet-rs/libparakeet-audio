@@ -1,4 +1,4 @@
-#include "parakeet-audio/DetectAudioType.h"
+#include "parakeet-audio/detect_audio_type.h"
 
 #include "parakeet_endian.h"
 
@@ -22,7 +22,7 @@ TEST(AudioDetection, MP4_Container_isom) {
       0x00, 0x00, 0x00, 0x10, 'f', 't', 'y', 'p', 'i', 's', 'o', 'm', 0x00, 0x00, 0x00, 0x01,
   };
 
-  auto detected_type = DetectAudioType(header);
+  auto detected_type = DetectAudioType(header.data(), header.size());
   EXPECT_EQ(detected_type, AudioType::kAudioTypeMP4);
   EXPECT_EQ(AudioIsLossless(detected_type), false);
   EXPECT_STREQ(GetAudioTypeExtension(detected_type), "mp4");
@@ -33,7 +33,7 @@ TEST(AudioDetection, MP4_Container_iso2) {
       0x00, 0x00, 0x00, 0x10, 'f', 't', 'y', 'p', 'i', 's', 'o', '2', 0x00, 0x00, 0x00, 0x01,
   };
 
-  auto detected_type = DetectAudioType(header);
+  auto detected_type = DetectAudioType(header.data(), header.size());
   EXPECT_EQ(detected_type, AudioType::kAudioTypeMP4);
   EXPECT_EQ(AudioIsLossless(detected_type), false);
   EXPECT_STREQ(GetAudioTypeExtension(detected_type), "mp4");
@@ -44,7 +44,7 @@ TEST(AudioDetection, MP4_SonyMP4_Container) {
       0x00, 0x00, 0x00, 0x10, 'f', 't', 'y', 'p', 'M', 'S', 'N', 'V', 0x00, 0x00, 0x00, 0x01,  //
   };
 
-  auto detected_type = DetectAudioType(header);
+  auto detected_type = DetectAudioType(header.data(), header.size());
   EXPECT_EQ(detected_type, AudioType::kAudioTypeMP4);
   EXPECT_EQ(AudioIsLossless(detected_type), false);
   EXPECT_STREQ(GetAudioTypeExtension(detected_type), "mp4");
@@ -56,7 +56,7 @@ TEST(AudioDetection, MP4_Generic_MP4_Container_with_dby1) {
       'm',  'p',  '4',  '2',  'd', 'b', 'y', '1', 0x00, 0x00, 0x1D, 0xD5, 0x6D, 0x6F, 0x6F, 0x76,
   };
 
-  auto detected_type = DetectAudioType(header);
+  auto detected_type = DetectAudioType(header.data(), header.size());
   EXPECT_EQ(detected_type, AudioType::kAudioTypeMP4);
   EXPECT_EQ(AudioIsLossless(detected_type), false);
   EXPECT_STREQ(GetAudioTypeExtension(detected_type), "mp4");
@@ -67,7 +67,7 @@ TEST(AudioDetection, MP4_Container_with_unsupported_type) {
       0x00, 0x00, 0x00, 0x10, 'f', 't', 'y', 'p', 'u', 'n', 'k', '?', 0x00, 0x00, 0x00, 0x01,
   };
 
-  auto detected_type = DetectAudioType(header);
+  auto detected_type = DetectAudioType(header.data(), header.size());
   EXPECT_EQ(detected_type, AudioType::kUnknownType);
   EXPECT_STREQ(GetAudioTypeExtension(detected_type), "bin");
 }

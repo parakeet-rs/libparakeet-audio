@@ -5,6 +5,7 @@ find_program(CLANG_TIDY NAMES "clang-tidy")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 option(PARAKEET_AUDIO_BUILD_TESTING "Build library tests" ON)
+option(PARAKEET_AUDIO_RUN_CLANG_TIDY "Run clang-tidy before compile" ON)
 
 include(cmake/CPM-Loader.cmake)
 include(cmake/git-info.cmake)
@@ -28,7 +29,7 @@ add_library(parakeet::audio ALIAS parakeet_audio)
 set_target_properties(parakeet_audio PROPERTIES
     CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON EXPORT_COMPILE_COMMANDS ON)
 # Clang-tidy is optional.
-if(CLANG_TIDY)
+if(CLANG_TIDY AND PARAKEET_AUDIO_RUN_CLANG_TIDY)
   set_target_properties(parakeet_audio PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY}")
 endif()
 

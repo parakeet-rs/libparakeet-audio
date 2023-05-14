@@ -25,6 +25,8 @@ file(GLOB_RECURSE SOURCES
 # Add source to this project's executable.
 add_library(parakeet_audio STATIC ${SOURCES})
 add_library(parakeet::audio ALIAS parakeet_audio)
+set_target_properties(parakeet_audio PROPERTIES
+    CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON EXPORT_COMPILE_COMMANDS ON)
 # Clang-tidy is optional.
 if(CLANG_TIDY)
   set_target_properties(parakeet_audio PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY}")
@@ -38,8 +40,6 @@ target_include_directories(parakeet_audio
     src
     "${PROJECT_BINARY_DIR}/src"
 )
-set_target_properties(parakeet_audio PROPERTIES
-    CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON EXPORT_COMPILE_COMMANDS ON)
 
 include(GNUInstallDirs)
 set(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/parakeet_audio)
@@ -54,11 +54,11 @@ set_target_properties(parakeet_audio PROPERTIES EXPORT_NAME ParakeetAudio)
 install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 install(EXPORT parakeet_audio-targets
   FILE
-  ParakeetAudioTargets.cmake
+    ParakeetAudioTargets.cmake
   NAMESPACE
-  ParakeetAudio::
+    ParakeetAudio::
   DESTINATION
-  ${CMAKE_INSTALL_LIBDIR}/cmake/parakeet_audio
+    ${CMAKE_INSTALL_LIBDIR}/cmake/parakeet_audio
 )
 
 # Tests!
